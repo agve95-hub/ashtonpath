@@ -34,7 +34,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-none bg-teal-700 text-white font-bold text-2xl mb-4 shadow-sm">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[3px] bg-teal-700 text-white font-bold text-2xl mb-4 shadow-sm">
             A
           </div>
           <h2 className="text-3xl font-bold text-slate-900 tracking-tight uppercase">Create an account</h2>

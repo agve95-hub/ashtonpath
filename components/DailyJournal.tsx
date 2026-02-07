@@ -21,13 +21,13 @@ const RangeInput: React.FC<{
   icon?: React.ReactNode;
   colorClass?: string;
 }> = ({ label, value, onChange, icon, colorClass = "accent-teal-600" }) => (
-  <div className="bg-slate-50 rounded-none p-4 border border-slate-200">
+  <div className="bg-slate-50 rounded-[3px] p-4 border border-slate-200">
     <div className="flex justify-between items-center mb-4">
       <label className="flex items-center gap-2 text-sm font-bold text-slate-700 uppercase tracking-wide">
         {icon}
         {label}
       </label>
-      <span className={`text-sm font-bold px-2 py-0.5 rounded-none border ${value > 7 ? 'bg-red-50 text-red-600 border-red-200' : 'bg-white text-slate-700 border-slate-200'}`}>
+      <span className={`text-sm font-bold px-2 py-0.5 rounded-[3px] border ${value > 7 ? 'bg-red-50 text-red-600 border-red-200' : 'bg-white text-slate-700 border-slate-200'}`}>
         {value}/10
       </span>
     </div>
@@ -38,7 +38,7 @@ const RangeInput: React.FC<{
       step="1"
       value={value}
       onChange={(e) => onChange(Number(e.target.value))}
-      className={`w-full h-2 bg-slate-200 rounded-none appearance-none cursor-pointer ${colorClass}`}
+      className={`w-full h-2 bg-slate-200 rounded-[3px] appearance-none cursor-pointer ${colorClass}`}
     />
     <div className="flex justify-between text-[10px] text-slate-400 uppercase tracking-wider font-bold mt-2">
       <span>None</span>
@@ -144,7 +144,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                     tickLine={false}
                   />
                   <Tooltip 
-                    contentStyle={{ borderRadius: '0px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontFamily: 'Sen' }}
+                    contentStyle={{ borderRadius: '3px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontFamily: 'Sen' }}
                   />
                   <Legend iconType="square" wrapperStyle={{ paddingTop: '20px', fontFamily: 'Sen' }} />
                   <Line type="monotone" dataKey="stress" name="Stress" stroke="#ef4444" strokeWidth={2.5} dot={false} activeDot={{r: 6}} />
@@ -168,7 +168,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                     value={date}
                     max={new Date().toISOString().split('T')[0]}
                     onChange={(e) => setDate(e.target.value)}
-                    className="pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-none text-sm font-bold text-slate-700 shadow-sm focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none uppercase"
+                    className="pl-10 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-[3px] text-sm font-bold text-slate-700 shadow-sm focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none uppercase"
                 />
                 <Calendar className="absolute left-3 top-2.5 text-slate-400 w-4 h-4" />
               </div>
@@ -207,7 +207,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                   <div className="space-y-6">
                       <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-t pt-6 border-slate-100">Vitals & Sleep</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                          <div className="bg-slate-50 rounded-none p-4 border border-slate-200 space-y-4">
+                          <div className="bg-slate-50 rounded-[3px] p-4 border border-slate-200 space-y-4">
                               <div className="flex justify-between items-center">
                                   <label className="flex items-center gap-2 text-sm font-bold text-slate-700 uppercase tracking-wide">
                                       <Moon size={16} className="text-slate-400" />
@@ -219,24 +219,24 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                                   type="range" min="0" max="10" step="1"
                                   value={formData.sleepQuality}
                                   onChange={(e) => setFormData(prev => ({...prev, sleepQuality: Number(e.target.value)}))}
-                                  className="w-full h-2 bg-slate-200 rounded-none appearance-none cursor-pointer accent-teal-500"
+                                  className="w-full h-2 bg-slate-200 rounded-[3px] appearance-none cursor-pointer accent-teal-500"
                               />
                           </div>
 
-                          <div className="bg-slate-50 rounded-none p-4 border border-slate-200 flex flex-col justify-center">
+                          <div className="bg-slate-50 rounded-[3px] p-4 border border-slate-200 flex flex-col justify-center">
                               <Label className="mb-2">Sleep Duration</Label>
                               <div className="flex items-center gap-2">
                                   <input 
                                       type="number" step="0.5" min="0" max="24"
                                       value={formData.sleepHours}
                                       onChange={(e) => setFormData(prev => ({...prev, sleepHours: Number(e.target.value)}))}
-                                      className="block w-24 bg-white border border-slate-200 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm p-2.5 font-bold"
+                                      className="block w-24 bg-white border border-slate-200 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm p-2.5 font-bold"
                                   />
                                   <span className="text-slate-500 text-sm font-bold uppercase">hours</span>
                               </div>
                           </div>
 
-                          <div className="md:col-span-2 bg-slate-50 rounded-none p-4 border border-slate-200">
+                          <div className="md:col-span-2 bg-slate-50 rounded-[3px] p-4 border border-slate-200">
                               <Label className="flex items-center gap-2 mb-3">
                                   <HeartPulse size={16} className="text-slate-400" />
                                   Blood Pressure
@@ -246,14 +246,14 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                                       type="number" placeholder="120"
                                       value={formData.systolic}
                                       onChange={(e) => setFormData(prev => ({...prev, systolic: e.target.value}))}
-                                      className="block w-28 bg-white border border-slate-200 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm p-2.5 text-center font-bold"
+                                      className="block w-28 bg-white border border-slate-200 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm p-2.5 text-center font-bold"
                                   />
                                   <span className="text-slate-400 text-xl font-light">/</span>
                                   <input 
                                       type="number" placeholder="80"
                                       value={formData.diastolic}
                                       onChange={(e) => setFormData(prev => ({...prev, diastolic: e.target.value}))}
-                                      className="block w-28 bg-white border border-slate-200 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm p-2.5 text-center font-bold"
+                                      className="block w-28 bg-white border border-slate-200 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm p-2.5 text-center font-bold"
                                   />
                                   <span className="text-slate-500 text-sm ml-2 font-bold uppercase">mmHg</span>
                               </div>
@@ -273,7 +273,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                               value={formData.medications}
                               onChange={(e) => setFormData(prev => ({...prev, medications: e.target.value}))}
                               placeholder="e.g. Propranolol 10mg, Magnesium supplement..."
-                              className="w-full bg-slate-50 border border-slate-200 rounded-none shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 text-sm p-3 h-20 placeholder:text-slate-400 resize-none transition-all"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-[3px] shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 text-sm p-3 h-20 placeholder:text-slate-400 resize-none transition-all"
                           />
                       </div>
                       <div>
@@ -285,14 +285,14 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                               value={formData.notes}
                               onChange={(e) => setFormData(prev => ({...prev, notes: e.target.value}))}
                               placeholder="Any other symptoms or feelings..."
-                              className="w-full bg-slate-50 border border-slate-200 rounded-none shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 text-sm p-3 h-24 placeholder:text-slate-400 resize-none transition-all"
+                              className="w-full bg-slate-50 border border-slate-200 rounded-[3px] shadow-sm focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 text-sm p-3 h-24 placeholder:text-slate-400 resize-none transition-all"
                           />
                       </div>
                     </div>
 
                   {showWarning && (
-                    <div className="bg-red-50 border border-red-200 rounded-none p-4 flex gap-4 items-start animate-in fade-in slide-in-from-bottom-2">
-                        <div className="p-2 bg-white rounded-none text-red-600 shrink-0 border border-red-100 shadow-sm">
+                    <div className="bg-red-50 border border-red-200 rounded-[3px] p-4 flex gap-4 items-start animate-in fade-in slide-in-from-bottom-2">
+                        <div className="p-2 bg-white rounded-[3px] text-red-600 shrink-0 border border-red-100 shadow-sm">
                             <AlertTriangle size={20} />
                         </div>
                         <div>
@@ -322,12 +322,12 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                   <History size={20} className="text-slate-400" />
                   History Log
               </h3>
-              <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded-none border border-slate-200 font-bold">Select entry to edit</span>
+              <span className="text-xs text-slate-500 bg-white px-2 py-1 rounded-[3px] border border-slate-200 font-bold">Select entry to edit</span>
           </CardHeader>
           <div className="space-y-4">
               {logs.length === 0 && (
-                  <div className="text-center py-16 bg-white rounded-none border border-dashed border-slate-200">
-                    <div className="w-12 h-12 bg-slate-50 rounded-none flex items-center justify-center mx-auto mb-3 text-slate-300">
+                  <div className="text-center py-16 bg-white rounded-[3px] border border-dashed border-slate-200">
+                    <div className="w-12 h-12 bg-slate-50 rounded-[3px] flex items-center justify-center mx-auto mb-3 text-slate-300">
                         <FileText size={24} />
                     </div>
                     <p className="text-slate-500 font-medium">No logs recorded yet</p>
@@ -343,7 +343,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                   <button 
                       key={log.date}
                       onClick={() => setDate(log.date)}
-                      className={`w-full text-left rounded-none transition-all overflow-hidden group relative mb-4 shadow-sm ${
+                      className={`w-full text-left rounded-[3px] transition-all overflow-hidden group relative mb-4 shadow-sm ${
                           isSelected 
                           ? 'bg-white ring-2 ring-teal-600 z-10' 
                           : 'bg-white hover:bg-slate-50'
@@ -352,7 +352,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                       {/* Header bar of the card */}
                       <div className={`px-5 py-3 flex justify-between items-center ${isSelected ? 'bg-teal-50' : 'bg-slate-50'}`}>
                           <div className="flex items-center gap-3">
-                             <div className={`w-3 h-3 rounded-none ${isHighSeverity ? 'bg-red-500' : 'bg-teal-500'}`} />
+                             <div className={`w-3 h-3 rounded-[3px] ${isHighSeverity ? 'bg-red-500' : 'bg-teal-500'}`} />
                              <span className="font-bold text-slate-700 text-sm uppercase tracking-wide">
                                 {new Date(log.date).toLocaleDateString(undefined, { weekday: 'short', month: 'long', day: 'numeric'})}
                              </span>
@@ -399,7 +399,7 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                           {(log.medications || log.notes) && (
                               <div className="sm:col-span-2 pt-4 border-t border-slate-100 mt-1 flex flex-col gap-2">
                                   {log.medications && (
-                                    <div className="flex gap-2 text-xs bg-slate-50 p-2 rounded-none border border-slate-200">
+                                    <div className="flex gap-2 text-xs bg-slate-50 p-2 rounded-[3px] border border-slate-200">
                                         <Pill size={14} className="text-slate-400 shrink-0 mt-0.5" />
                                         <span className="text-slate-600 font-bold truncate">{log.medications}</span>
                                     </div>

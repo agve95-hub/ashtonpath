@@ -28,7 +28,7 @@ export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-none bg-teal-700 text-white font-bold text-2xl mb-4 shadow-sm">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[3px] bg-teal-700 text-white font-bold text-2xl mb-4 shadow-sm">
             A
           </div>
           <h2 className="text-3xl font-bold text-slate-900 tracking-tight uppercase">Welcome back</h2>
@@ -60,7 +60,7 @@ export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
 
               <div className="flex items-center justify-between text-sm pt-1">
                  <label className="flex items-center gap-2 text-slate-600 cursor-pointer select-none">
-                    <input type="checkbox" className="rounded-none border-slate-300 text-teal-600 focus:ring-teal-500/20 w-4 h-4" />
+                    <input type="checkbox" className="rounded-[3px] border-slate-300 text-teal-600 focus:ring-teal-500/20 w-4 h-4" />
                     Remember me
                  </label>
                  <a href="#" className="text-teal-700 hover:text-teal-800 font-bold hover:underline">Forgot password?</a>

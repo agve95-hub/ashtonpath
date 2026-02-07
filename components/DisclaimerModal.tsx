@@ -13,9 +13,9 @@ export const DisclaimerModal: React.FC<Props> = ({ onAccept, isOpen }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="bg-white rounded-[3px] shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="bg-amber-50 p-6 border-b border-amber-100 flex items-center gap-4">
-          <div className="p-3 bg-amber-100 rounded-full text-amber-600">
+          <div className="p-3 bg-amber-100 rounded-[3px] text-amber-600">
             <AlertTriangle size={24} />
           </div>
           <h2 className="text-xl font-bold text-amber-900">Important Safety Warning</h2>
@@ -26,7 +26,7 @@ export const DisclaimerModal: React.FC<Props> = ({ onAccept, isOpen }) => {
             {DISCLAIMER_TEXT}
           </p>
           
-          <div className="bg-slate-50 p-4 rounded-xl text-sm text-slate-600">
+          <div className="bg-slate-50 p-4 rounded-[3px] text-sm text-slate-600">
             <ul className="list-disc pl-5 space-y-1">
               <li>Do not use this app as a substitute for professional medical advice.</li>
               <li>Always verify doses with your doctor.</li>

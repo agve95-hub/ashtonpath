@@ -103,7 +103,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                     >
                         {/* Timeline Node */}
                         <div className={`
-                            absolute left-0 top-0 w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold border-2 z-10 transition-all shadow-sm
+                            absolute left-0 top-0 w-10 h-10 rounded-[3px] flex items-center justify-center text-xs font-bold border-2 z-10 transition-all shadow-sm
                             ${isActive 
                                 ? 'bg-teal-600 text-white border-teal-600 ring-4 ring-teal-100 scale-110' 
                                 : step.isCompleted 
@@ -114,7 +114,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                         </div>
 
                         <div className={`
-                            relative rounded-none border transition-all duration-300 overflow-hidden
+                            relative rounded-[3px] border transition-all duration-300 overflow-hidden
                             ${isActive ? 'bg-white border-teal-600 shadow-md ring-1 ring-teal-600' : 'bg-white border-slate-200'}
                             ${isFuture ? 'bg-slate-50 border-slate-200' : ''}
                         `}>
@@ -136,7 +136,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                     </div>
                                 </div>
                                 
-                                <div className="flex items-center gap-3 bg-slate-50 px-3 py-2 rounded-none border border-slate-100 self-start sm:self-auto">
+                                <div className="flex items-center gap-3 bg-slate-50 px-3 py-2 rounded-[3px] border border-slate-100 self-start sm:self-auto">
                                     <div className="text-right">
                                         <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider">Dosage</span>
                                         <span className="block font-bold text-slate-900 text-lg leading-none">{step.diazepamDose}<span className="text-xs font-normal text-slate-500 ml-1">mg</span></span>
@@ -161,7 +161,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                             onClick={() => onToggleDay(step.id, dayIndex)}
                                             disabled={!isAccessible}
                                             className={`
-                                                flex items-center gap-3 p-3 rounded-none border transition-all text-left group relative overflow-hidden
+                                                flex items-center gap-3 p-3 rounded-[3px] border transition-all text-left group relative overflow-hidden
                                                 ${isDone 
                                                     ? 'bg-teal-50 border-teal-200' 
                                                     : 'bg-white border-slate-200 hover:border-teal-300 hover:shadow-sm'
@@ -172,7 +172,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                             `}
                                         >
                                             <div className={`
-                                                w-6 h-6 rounded-none flex items-center justify-center border transition-colors flex-shrink-0
+                                                w-6 h-6 rounded-[3px] flex items-center justify-center border transition-colors flex-shrink-0
                                                 ${isDone 
                                                     ? 'bg-teal-600 border-teal-600 text-white' 
                                                     : 'bg-white border-slate-300 group-hover:border-teal-400 text-transparent'
@@ -187,7 +187,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                                         Day {dayIndex + 1}
                                                     </span>
                                                     {isToday && (
-                                                        <span className="text-[10px] font-bold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-none">
+                                                        <span className="text-[10px] font-bold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-[3px]">
                                                             TODAY
                                                         </span>
                                                     )}
@@ -203,7 +203,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                 
                                 <button
                                     onClick={() => onAddDay(step.id)}
-                                    className="w-full mt-2 flex items-center justify-center gap-2 p-3 rounded-none border border-dashed border-slate-300 text-slate-400 hover:border-teal-400 hover:text-teal-600 hover:bg-teal-50 transition-all text-sm font-bold uppercase tracking-wide"
+                                    className="w-full mt-2 flex items-center justify-center gap-2 p-3 rounded-[3px] border border-dashed border-slate-300 text-slate-400 hover:border-teal-400 hover:text-teal-600 hover:bg-teal-50 transition-all text-sm font-bold uppercase tracking-wide"
                                 >
                                     <Plus size={16} />
                                     <span>Extend this step by 1 day</span>
@@ -216,7 +216,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                     {step.completedDays.filter(d => d).length >= step.durationDays - 1 && (
                                         <div className="animate-in fade-in slide-in-from-top-1">
                                             {stability === 'unstable' ? (
-                                                <div className="bg-white border border-red-200 rounded-none p-4 flex gap-4 items-start shadow-sm">
+                                                <div className="bg-white border border-red-200 rounded-[3px] p-4 flex gap-4 items-start shadow-sm">
                                                     <div className="p-2 bg-red-50 rounded-full text-red-500">
                                                         <AlertTriangle size={20} />
                                                     </div>
@@ -228,7 +228,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <div className="bg-white border border-teal-200 rounded-none p-4 flex gap-4 items-start shadow-sm">
+                                                <div className="bg-white border border-teal-200 rounded-[3px] p-4 flex gap-4 items-start shadow-sm">
                                                     <div className="p-2 bg-teal-50 rounded-full text-teal-600">
                                                         <ThermometerSun size={20} />
                                                     </div>
@@ -251,7 +251,7 @@ export const TaperSchedule: React.FC<Props> = ({ steps, medication, isDiazepamCr
             
             {visibleLimit < steps.length && (
                 <div className="text-center py-8 pl-10 sm:pl-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-none bg-slate-100 text-slate-500 text-sm font-bold uppercase tracking-wide border border-slate-200">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-[3px] bg-slate-100 text-slate-500 text-sm font-bold uppercase tracking-wide border border-slate-200">
                         <Lock size={14} />
                         <span>{steps.length - visibleLimit} future steps hidden</span>
                     </div>

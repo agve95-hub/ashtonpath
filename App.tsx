@@ -194,7 +194,7 @@ const App: React.FC = () => {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 bg-opacity-90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-3">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-teal-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            <div className="w-9 h-9 bg-teal-600 rounded-[3px] flex items-center justify-center text-white font-bold text-lg shadow-sm">
                 A
             </div>
             <h1 className="text-xl font-bold text-slate-900 tracking-tight hidden sm:block">AshtonPath</h1>
@@ -204,7 +204,7 @@ const App: React.FC = () => {
                 href="https://www.benzo.org.uk/manual/" 
                 target="_blank" 
                 rel="noreferrer"
-                className="text-sm font-medium text-slate-500 hover:text-teal-600 hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors"
+                className="text-sm font-medium text-slate-500 hover:text-teal-600 hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-[3px] hover:bg-slate-50 transition-colors"
             >
                 <BookOpen size={16} />
                 <span className="hidden sm:inline">Manual</span>
@@ -220,7 +220,7 @@ const App: React.FC = () => {
 
              <button 
                 onClick={handleLogout}
-                className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-2 rounded-lg transition-colors"
+                className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-2 rounded-[3px] transition-colors"
                 title="Log Out"
              >
                  <LogOut size={20} />
@@ -240,7 +240,7 @@ const App: React.FC = () => {
              </div>
             <TaperForm onGenerate={handleGeneratePlan} />
             
-            <div className="mt-8 bg-blue-50/50 p-5 rounded-2xl flex items-start gap-3 text-sm text-blue-800 border border-blue-100/50">
+            <div className="mt-8 bg-blue-50/50 p-5 rounded-[3px] flex items-start gap-3 text-sm text-blue-800 border border-blue-100/50">
                 <Info className="shrink-0 mt-0.5 text-blue-600" size={18} />
                 <p className="leading-relaxed text-blue-700">
                     <span className="font-semibold block mb-1 text-blue-900">Why Diazepam?</span>
@@ -252,10 +252,10 @@ const App: React.FC = () => {
           <div className="animate-in fade-in duration-500 space-y-8">
             
             {/* Tab Navigation */}
-            <div className="grid grid-cols-3 gap-1 bg-slate-200/60 p-1.5 rounded-2xl mb-8 shadow-inner">
+            <div className="grid grid-cols-3 gap-1 bg-slate-200/60 p-1.5 rounded-[3px] mb-8 shadow-inner">
               <button 
                 onClick={() => setActiveTab('overview')}
-                className={`flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-[3px] transition-all ${
                   activeTab === 'overview' 
                     ? 'bg-white text-teal-700 shadow-sm ring-1 ring-slate-200' 
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -266,7 +266,7 @@ const App: React.FC = () => {
               </button>
               <button 
                 onClick={() => setActiveTab('log')}
-                className={`flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-[3px] transition-all ${
                   activeTab === 'log' 
                     ? 'bg-white text-teal-700 shadow-sm ring-1 ring-slate-200' 
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -277,7 +277,7 @@ const App: React.FC = () => {
               </button>
               <button 
                 onClick={() => setActiveTab('settings')}
-                className={`flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 text-sm font-semibold rounded-[3px] transition-all ${
                   activeTab === 'settings' 
                     ? 'bg-white text-teal-700 shadow-sm ring-1 ring-slate-200' 
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
@@ -298,7 +298,7 @@ const App: React.FC = () => {
                 )}
 
                 {/* Stats Card */}
-                <div className="bg-gradient-to-br from-teal-600 to-teal-800 text-white rounded-2xl p-6 shadow-lg shadow-teal-900/10 relative overflow-hidden">
+                <div className="bg-gradient-to-br from-teal-600 to-teal-800 text-white rounded-[3px] p-6 shadow-lg shadow-teal-900/10 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
                     <div className="relative z-10 flex items-center justify-between">
                         <div>
@@ -306,7 +306,7 @@ const App: React.FC = () => {
                             <div className="text-4xl font-bold tracking-tight">
                                 {Math.round((plan.steps.filter(s => s.isCompleted).length / plan.steps.length) * 100)}%
                             </div>
-                            <p className="text-teal-100 text-sm mt-2 font-medium bg-white/10 inline-flex px-2 py-1 rounded-lg">
+                            <p className="text-teal-100 text-sm mt-2 font-medium bg-white/10 inline-flex px-2 py-1 rounded-[3px]">
                                 {plan.steps.filter(s => s.isCompleted).length} of {plan.steps.length} weeks complete
                             </p>
                         </div>
@@ -324,7 +324,7 @@ const App: React.FC = () => {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between">
                         <h3 className="text-lg font-bold text-slate-900">Reduction Curve</h3>
-                        <div className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">
+                        <div className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-[3px] border border-slate-200">
                             Diazepam Equivalent (mg)
                         </div>
                     </CardHeader>
@@ -418,7 +418,7 @@ const App: React.FC = () => {
 
       {/* Safety Footer */}
       <footer className="max-w-3xl mx-auto px-4 text-center mt-12 mb-6">
-         <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-800 text-xs font-medium rounded-full border border-amber-100/50 shadow-sm">
+         <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-800 text-xs font-medium rounded-[3px] border border-amber-100/50 shadow-sm">
             <AlertCircle size={14} />
             <span>Always consult your doctor before changing your dosage. This app is not medical advice.</span>
          </div>

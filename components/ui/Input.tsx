@@ -24,7 +24,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={`
-              block w-full rounded-none border-slate-300 bg-white text-slate-900 shadow-sm transition-all
+              block w-full rounded-[3px] border-slate-300 bg-white text-slate-900 shadow-sm transition-all
               placeholder:text-slate-400 focus:border-teal-600 focus:ring-1 focus:ring-teal-600
               disabled:cursor-not-allowed disabled:opacity-50
               ${icon ? 'pl-10' : 'px-3'} py-2.5 text-sm border

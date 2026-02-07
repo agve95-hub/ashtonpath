@@ -63,14 +63,14 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                     {/* Avatar Section */}
                     <div className="flex flex-col items-center gap-3">
                         <div className="relative group cursor-pointer shrink-0" onClick={() => fileInputRef.current?.click()}>
-                            <div className="w-24 h-24 rounded-full bg-slate-100 border-2 border-slate-200 overflow-hidden flex items-center justify-center">
+                            <div className="w-24 h-24 rounded-[3px] bg-slate-100 border-2 border-slate-200 overflow-hidden flex items-center justify-center">
                                 {formData.avatar ? (
                                     <img src={formData.avatar} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (
                                     <User size={40} className="text-slate-300" />
                                 )}
                             </div>
-                            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute inset-0 bg-black/40 rounded-[3px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Camera size={20} className="text-white" />
                             </div>
                         </div>
@@ -95,7 +95,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                                     type="text" 
                                     value={formData.name} 
                                     onChange={e => setFormData(prev => ({...prev, name: e.target.value}))}
-                                    className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                                    className="block w-full px-3 py-2 border border-slate-300 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                                     placeholder="Your Name"
                                 />
                              </div>
@@ -105,7 +105,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                                     type="number" 
                                     value={formData.age} 
                                     onChange={e => setFormData(prev => ({...prev, age: e.target.value}))}
-                                    className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                                    className="block w-full px-3 py-2 border border-slate-300 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                                     placeholder="e.g. 35"
                                 />
                              </div>
@@ -119,7 +119,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                                 type="text" 
                                 value={formData.usageDuration} 
                                 onChange={e => setFormData(prev => ({...prev, usageDuration: e.target.value}))}
-                                className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                                className="block w-full px-3 py-2 border border-slate-300 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                                 placeholder="e.g. 2 years, 6 months..."
                             />
                         </div>
@@ -153,7 +153,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                         type="password" 
                         value={passwordData.current}
                         onChange={e => setPasswordData(prev => ({...prev, current: e.target.value}))}
-                        className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                     />
                 </div>
                 <div>
@@ -162,7 +162,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                         type="password" 
                         value={passwordData.new}
                         onChange={e => setPasswordData(prev => ({...prev, new: e.target.value}))}
-                        className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                     />
                 </div>
                 <div>
@@ -171,7 +171,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                         type="password" 
                         value={passwordData.confirm}
                         onChange={e => setPasswordData(prev => ({...prev, confirm: e.target.value}))}
-                        className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-[3px] shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                     />
                 </div>
                 <div className="pt-2">
