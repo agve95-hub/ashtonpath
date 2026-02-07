@@ -10,7 +10,8 @@ export enum BenzoType {
 export enum TaperSpeed {
   SLOW = 'Slow (5% cuts)',
   MODERATE = 'Moderate (10% cuts)',
-  FAST = 'Standard Ashton (Varied)' // The classic manual often uses fixed mg drops which equate to variable %
+  FAST = 'Standard Ashton (Varied)', // The classic manual often uses fixed mg drops which equate to variable %
+  CUSTOM = 'Custom (Target Date)'
 }
 
 export interface BenzoData {

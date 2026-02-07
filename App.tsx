@@ -113,8 +113,8 @@ const App: React.FC = () => {
     localStorage.setItem('ashton_disclaimer', 'true');
   };
 
-  const handleGeneratePlan = (med: BenzoType, dose: number, speed: TaperSpeed, date: string) => {
-    const newPlan = calculateTaperSchedule(med, dose, speed, date);
+  const handleGeneratePlan = (med: BenzoType, dose: number, speed: TaperSpeed, date: string, targetEndDate?: string) => {
+    const newPlan = calculateTaperSchedule(med, dose, speed, date, targetEndDate);
     setPlan(newPlan);
     localStorage.setItem('ashton_plan', JSON.stringify(newPlan));
     setActiveTab('overview');
@@ -199,21 +199,32 @@ const App: React.FC = () => {
             </div>
             <h1 className="text-xl font-bold text-slate-900 tracking-tight">AshtonPath</h1>
           </div>
-          <div className="flex items-center gap-4">
-             {userProfile.avatar && (
-                 <div className="flex items-center gap-2 mr-2">
-                    <img src={userProfile.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-slate-200" />
-                 </div>
-             )}
+          <div className="flex items-center gap-3 sm:gap-4">
              <a 
                 href="https://www.benzo.org.uk/manual/" 
                 target="_blank" 
                 rel="noreferrer"
-                className="text-sm font-medium text-slate-500 hover:text-teal-600 hidden sm:flex items-center gap-1"
+                className="text-sm font-medium text-slate-500 hover:text-teal-600 hidden sm:flex items-center gap-1 mr-2"
             >
                 <BookOpen size={16} />
                 <span className="hidden sm:inline">Read the Manual</span>
             </a>
+            
+             {userProfile.avatar && (
+                 <div className="flex items-center gap-2">
+                    <img src={userProfile.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-sm" />
+                 </div>
+             )}
+
+             <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+
+             <button 
+                onClick={handleLogout}
+                className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-2 rounded-full transition-colors"
+                title="Log Out"
+             >
+                 <LogOut size={20} />
+             </button>
           </div>
         </div>
       </header>

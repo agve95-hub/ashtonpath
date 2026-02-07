@@ -11,7 +11,8 @@ export const calculateTaperSchedule = (
   medication: BenzoType,
   currentDose: number,
   speed: TaperSpeed,
-  startDate: string
+  startDate: string,
+  targetEndDate?: string
 ): TaperPlan => {
   const details = BENZO_DETAILS[medication];
   
@@ -22,8 +23,30 @@ export const calculateTaperSchedule = (
   let currentValium = startingDiazepamEq;
   let weekCount = 0;
 
-  // Initial State (Stabilization) - usually 1-2 weeks
-  const initDuration = 14; 
+  // Custom Logic Variables
+  let customWeeklyReduction = 0;
+  let initDuration = 14;
+
+  if (speed === TaperSpeed.CUSTOM && targetEndDate) {
+    const start = new Date(startDate);
+    const end = new Date(targetEndDate);
+    const diffTime = end.getTime() - start.getTime();
+    const totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Adjust stabilization duration based on total timeline
+    if (totalDays < 28) initDuration = 0; // Skip stabilization if timeline is very short
+    else if (totalDays < 60) initDuration = 7; // Shorten to 1 week if timeline is medium
+    // else default 14
+
+    // Calculate linear reduction
+    // Available days for tapering after stabilization
+    const taperingDays = Math.max(1, totalDays - initDuration);
+    // Assume 7-day steps for custom linear taper
+    const weeks = taperingDays / 7;
+    customWeeklyReduction = startingDiazepamEq / weeks;
+  }
+
+  // Initial State (Stabilization)
   steps.push({
     id: `step-init`,
     week: 0,
@@ -36,8 +59,6 @@ export const calculateTaperSchedule = (
   });
 
   // 2. Determine Reduction Rate
-  // Ashton generally recommends 1mg drops every 1-2 weeks if dose < 20mg
-  // Or 5-10% reductions.
   
   const isDirectTaper = medication === BenzoType.DIAZEPAM;
 
@@ -46,13 +67,18 @@ export const calculateTaperSchedule = (
   
   while (currentValium > 0 && safetyValve < 150) {
     // Determine duration based on speed
+    // Custom defaults to 7 days per step for smoother linear decline
     const stepDuration = speed === TaperSpeed.SLOW ? 14 : 7;
     weekCount += (speed === TaperSpeed.SLOW ? 2 : 1); 
     safetyValve++;
 
     let reductionAmount = 0;
 
-    if (speed === TaperSpeed.FAST) {
+    if (speed === TaperSpeed.CUSTOM) {
+        reductionAmount = customWeeklyReduction;
+        // Safety clamp to ensure we don't stall if calculation was weird
+        if (reductionAmount < 0.1) reductionAmount = 0.1;
+    } else if (speed === TaperSpeed.FAST) {
         // "Standard" Ashton Logic approximation
         if (currentValium > 40) reductionAmount = 5;       // Drop 5mg
         else if (currentValium > 20) reductionAmount = 2;  // Drop 2mg
@@ -72,7 +98,7 @@ export const calculateTaperSchedule = (
 
     const nextDose = currentValium - reductionAmount;
 
-    if (nextDose <= 0) {
+    if (nextDose <= 0.1) { // Floating point epsilon safety
       currentValium = 0;
     } else {
       currentValium = nextDose;
