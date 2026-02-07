@@ -407,7 +407,8 @@ export const DailyJournal: React.FC<Props> = ({ logs, onSave, className = "" }) 
                           )}
                       </div>
                   </button>
-              ))}
+                  );
+              })}
             </div>
           </CardContent>
       </Card>
