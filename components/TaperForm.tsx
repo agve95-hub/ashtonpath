@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BenzoType, TaperSpeed } from '../types';
 import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import { Label } from './ui/Label';
 import { Card, CardContent, CardHeader } from './ui/Card';
-import { Activity, Calendar, Pill, Settings } from 'lucide-react';
+import { Activity, Calendar, Pill, Settings, ArrowRight } from 'lucide-react';
 import { BENZO_DETAILS } from '../constants';
 
 interface Props {
@@ -36,10 +38,10 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
   const selectedMedData = BENZO_DETAILS[medication];
 
   return (
-    <Card className="h-full border-t-4 border-t-teal-500">
+    <Card className="h-full border-t-4 border-t-teal-500 shadow-md">
       <CardHeader>
         <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <Activity className="text-teal-500" size={20} />
+          <Activity className="text-teal-600" size={20} />
           Plan Your Taper
         </h2>
         <p className="text-slate-500 text-sm mt-1">
@@ -47,110 +49,105 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
         </p>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Medication Select */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Current Medication</label>
+            <Label>Current Medication</Label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Pill className="h-4 w-4 text-slate-400" />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <Pill className="h-4 w-4" />
               </div>
               <select
                 value={medication}
                 onChange={(e) => setMedication(e.target.value as BenzoType)}
-                className="block w-full pl-10 pr-3 py-2 text-base border-slate-300 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm rounded-xl border bg-slate-50"
+                className="block w-full pl-10 pr-10 py-2.5 text-sm border-slate-200 focus:outline-none focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 rounded-xl bg-white shadow-sm transition-all appearance-none border"
               >
                 {Object.values(BenzoType).map((med) => (
                   <option key={med} value={med}>{med}</option>
                 ))}
               </select>
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                <Settings className="h-4 w-4 opacity-50" />
+              </div>
             </div>
             {selectedMedData && (
-              <p className="text-xs text-slate-500 mt-2 bg-slate-100 p-2 rounded-lg">
-                <span className="font-semibold">Half-life:</span> {selectedMedData.halfLife}.{' '}
-                <span className="font-semibold">Equivalence:</span> 1mg ≈ {selectedMedData.diazepamEquivalence}mg Valium.
-              </p>
+              <div className="mt-2 bg-slate-50 border border-slate-100 p-3 rounded-lg text-xs text-slate-600">
+                <div className="flex gap-4">
+                    <span><span className="font-semibold">Half-life:</span> {selectedMedData.halfLife}</span>
+                    <span><span className="font-semibold">Eq:</span> 1mg ≈ {selectedMedData.diazepamEquivalence}mg Valium</span>
+                </div>
+              </div>
             )}
           </div>
 
           {/* Dose Input */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Daily Dose (mg)</label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              value={dose}
-              onChange={(e) => setDose(e.target.value)}
-              className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-            />
-          </div>
+          <Input 
+            label="Daily Dose (mg)"
+            type="number"
+            step="0.01"
+            min="0"
+            value={dose}
+            onChange={(e) => setDose(e.target.value)}
+            className="font-mono"
+          />
 
           {/* Speed Select */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Taper Pace</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <Label>Taper Pace</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {Object.values(TaperSpeed).map((s) => (
                 <button
                   key={s}
                   type="button"
                   onClick={() => setSpeed(s)}
-                  className={`px-2 py-2 text-xs font-medium rounded-lg border text-center transition-all flex flex-col items-center justify-center h-full min-h-[50px] ${
+                  className={`px-2 py-3 text-xs font-medium rounded-xl border text-center transition-all flex flex-col items-center justify-center h-full min-h-[60px] relative overflow-hidden ${
                     speed === s 
-                      ? 'bg-teal-50 border-teal-500 text-teal-700 ring-1 ring-teal-500' 
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                      ? 'bg-teal-50 border-teal-500 text-teal-800 ring-1 ring-teal-500 shadow-sm' 
+                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
                   }`}
                 >
-                  <span className="font-semibold">{s.split('(')[0]}</span>
-                  <span className="text-[9px] opacity-75 mt-0.5 whitespace-nowrap">{s.match(/\(([^)]+)\)/)?.[1]}</span>
+                  <span className="font-bold text-sm mb-0.5">{s.split('(')[0]}</span>
+                  <span className="text-[10px] opacity-80 whitespace-nowrap">{s.match(/\(([^)]+)\)/)?.[1]}</span>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Start Date */}
-            <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Start Date</label>
-                <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Calendar className="h-4 w-4 text-slate-400" />
-                </div>
-                <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="block w-full pl-10 px-3 py-2 border border-slate-300 rounded-xl shadow-sm placeholder-slate-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-                />
-                </div>
-            </div>
+            <Input 
+                label="Start Date"
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                icon={<Calendar className="h-4 w-4" />}
+            />
             
             {/* Target End Date (Conditional) */}
             {speed === TaperSpeed.CUSTOM && (
                 <div className="animate-in fade-in slide-in-from-left-2 duration-200">
-                    <label className="block text-sm font-medium text-teal-700 mb-1 flex items-center gap-1">
-                        Target End Date
-                        <Settings size={12} className="text-teal-500" />
-                    </label>
+                    <Label className="text-teal-700 flex items-center gap-1">Target End Date</Label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Calendar className="h-4 w-4 text-teal-500" />
+                            <Calendar className="h-4 w-4 text-teal-600" />
                         </div>
                         <input
                             type="date"
                             min={startDate}
                             value={targetEndDate}
                             onChange={(e) => setTargetEndDate(e.target.value)}
-                            className="block w-full pl-10 px-3 py-2 border-2 border-teal-100 rounded-xl shadow-sm text-teal-900 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm bg-teal-50/30"
+                            className="block w-full pl-10 px-3 py-2.5 border-2 border-teal-100 rounded-xl shadow-sm text-teal-900 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 text-sm bg-teal-50/30"
                         />
                     </div>
                 </div>
             )}
           </div>
 
-          <Button type="submit" size="lg" className="w-full">
-            Generate Schedule
-          </Button>
+          <div className="pt-2">
+            <Button type="submit" size="lg" className="w-full">
+                Generate Schedule
+                <ArrowRight size={18} className="ml-1 opacity-60" />
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
