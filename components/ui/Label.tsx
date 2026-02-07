@@ -5,11 +5,12 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   className?: string;
 }
 
-export const Label: React.FC<LabelProps> = ({ children, className = '', ...props }) => {
+export const Label: React.FC<LabelProps> = (props) => {
+  const { children, className = '', ...rest } = props;
   return (
     <label 
-      className={`block text-sm font-medium text-slate-700 mb-1.5 ${className}`}
-      {...props}
+      className={`block text-xs font-bold text-slate-500 mb-1.5 ${className}`}
+      {...rest}
     >
       {children}
     </label>

@@ -9,7 +9,8 @@ interface Props {
   onSwitchToRegister: () => void;
 }
 
-export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
+export const LoginPage: React.FC<Props> = (props) => {
+  const { onLogin, onSwitchToRegister } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +32,7 @@ export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-[3px] bg-teal-700 text-white font-bold text-2xl mb-4 shadow-sm">
             A
           </div>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight uppercase">Welcome back</h2>
+          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Welcome back</h2>
           <p className="text-slate-500 text-lg">Sign in to continue your journey</p>
         </div>
 
@@ -45,7 +46,7 @@ export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                icon={<Mail className="h-4 w-4" />}
+                icon={<Mail className="w-4 h-4 text-slate-400" />}
               />
 
               <Input
@@ -55,7 +56,7 @@ export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                icon={<Lock className="h-4 w-4" />}
+                icon={<Lock className="w-4 h-4 text-slate-400" />}
               />
 
               <div className="flex items-center justify-between text-sm pt-1">
@@ -68,7 +69,7 @@ export const LoginPage: React.FC<Props> = ({ onLogin, onSwitchToRegister }) => {
 
               <Button type="submit" size="lg" className="w-full mt-2" isLoading={isLoading}>
                 Sign In
-                {!isLoading && <ArrowRight size={18} className="ml-1 opacity-60" />}
+                {!isLoading && <ArrowRight className="w-4 h-4 ml-1 opacity-60" />}
               </Button>
             </form>
           </CardContent>

@@ -50,6 +50,9 @@ export interface DailyLogEntry {
   stress: number; // 0-10
   tremors: number; // 0-10
   dizziness: number; // 0-10
+  musclePain?: number; // 0-10 (New)
+  nausea?: number; // 0-10 (New)
+  irritability?: number; // 0-10 (New)
   sleepQuality: number; // 0-10
   sleepHours: number;
   systolic: string; // BP Systolic

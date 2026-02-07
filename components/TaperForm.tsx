@@ -3,29 +3,39 @@ import { BenzoType, TaperSpeed } from '../types';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Label } from './ui/Label';
-import { Card, CardContent, CardHeader } from './ui/Card';
-import { Activity, Calendar, Pill, Settings, ArrowRight } from 'lucide-react';
+import { Card, CardContent } from './ui/Card';
 import { BENZO_DETAILS } from '../constants';
+import { Pill, Settings, Clock, Scale, CheckCircle2, Calendar, ArrowRight } from 'lucide-react';
+
+interface TaperFormValues {
+  medication: BenzoType;
+  dose: number;
+  speed: TaperSpeed;
+  startDate: string;
+  targetEndDate?: string;
+}
 
 interface Props {
   onGenerate: (med: BenzoType, dose: number, speed: TaperSpeed, date: string, targetEndDate?: string) => void;
+  initialValues?: TaperFormValues;
 }
 
-export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
-  const [medication, setMedication] = useState<BenzoType>(BenzoType.ALPRAZOLAM);
-  const [dose, setDose] = useState<string>('1.0');
-  const [speed, setSpeed] = useState<TaperSpeed>(TaperSpeed.MODERATE);
-  const [startDate, setStartDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [targetEndDate, setTargetEndDate] = useState<string>('');
+export const TaperForm: React.FC<Props> = (props) => {
+  const { onGenerate, initialValues } = props;
+  const [medication, setMedication] = useState<BenzoType>(initialValues?.medication || BenzoType.ALPRAZOLAM);
+  const [dose, setDose] = useState<string>(initialValues?.dose?.toString() || '1.0');
+  const [speed, setSpeed] = useState<TaperSpeed>(initialValues?.speed || TaperSpeed.MODERATE);
+  const [startDate, setStartDate] = useState<string>(initialValues?.startDate || new Date().toISOString().split('T')[0]);
+  const [targetEndDate, setTargetEndDate] = useState<string>(initialValues?.targetEndDate || '');
 
-  // Set a default target date (6 months out) when Custom is first selected
   useEffect(() => {
+    // Only set default target date if we are switching to CUSTOM and don't have one
     if (speed === TaperSpeed.CUSTOM && !targetEndDate) {
         const d = new Date(startDate);
-        d.setDate(d.getDate() + 180); // Default 6 months
+        d.setDate(d.getDate() + 180); 
         setTargetEndDate(d.toISOString().split('T')[0]);
     }
-  }, [speed, startDate]);
+  }, [speed, startDate, targetEndDate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,114 +48,131 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
   const selectedMedData = BENZO_DETAILS[medication];
 
   return (
-    <Card className="h-full border-t-4 border-t-teal-700 shadow-md">
-      <CardHeader>
-        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
-          <Activity className="text-teal-600" size={20} />
-          Plan Your Taper
-        </h2>
-        <p className="text-slate-500 text-sm mt-1">
-          Enter your current usage to generate a draft schedule.
-        </p>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Medication Select */}
-          <div>
-            <Label>Current Medication</Label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <Pill className="h-4 w-4" />
-              </div>
-              <select
-                value={medication}
-                onChange={(e) => setMedication(e.target.value as BenzoType)}
-                className="block w-full pl-10 pr-10 py-2.5 text-sm border-slate-300 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 rounded-[3px] bg-white shadow-sm transition-all appearance-none border font-medium"
-              >
-                {Object.values(BenzoType).map((med) => (
-                  <option key={med} value={med}>{med}</option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
-                <Settings className="h-4 w-4 opacity-50" />
-              </div>
-            </div>
-            {selectedMedData && (
-              <div className="mt-2 bg-slate-50 border border-slate-200 p-3 rounded-[3px] text-xs text-slate-600 font-medium">
-                <div className="flex gap-4">
-                    <span><span className="font-bold">Half-life:</span> {selectedMedData.halfLife}</span>
-                    <span><span className="font-bold">Eq:</span> 1mg ≈ {selectedMedData.diazepamEquivalence}mg Valium</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Dose Input */}
-          <Input 
-            label="Daily Dose (mg)"
-            type="number"
-            step="0.01"
-            min="0"
-            value={dose}
-            onChange={(e) => setDose(e.target.value)}
-            className="font-mono"
-          />
-
-          {/* Speed Select */}
-          <div>
-            <Label>Taper Pace</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {Object.values(TaperSpeed).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSpeed(s)}
-                  className={`px-2 py-3 text-xs font-medium rounded-[3px] border text-center transition-all flex flex-col items-center justify-center h-full min-h-[60px] relative overflow-hidden ${
-                    speed === s 
-                      ? 'bg-teal-50 border-teal-600 text-teal-900 ring-1 ring-teal-600' 
-                      : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50 hover:border-slate-400'
-                  }`}
-                >
-                  <span className="font-bold text-sm mb-0.5">{s.split('(')[0]}</span>
-                  <span className="text-[10px] opacity-80 whitespace-nowrap uppercase tracking-wider">{s.match(/\(([^)]+)\)/)?.[1]}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input 
-                label="Start Date"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                icon={<Calendar className="h-4 w-4" />}
-            />
-            
-            {/* Target End Date (Conditional) */}
-            {speed === TaperSpeed.CUSTOM && (
-                <div className="animate-in fade-in slide-in-from-left-2 duration-200">
-                    <Label className="text-teal-700 flex items-center gap-1">Target End Date</Label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <Calendar className="h-4 w-4 text-teal-600" />
-                        </div>
-                        <input
-                            type="date"
-                            min={startDate}
-                            value={targetEndDate}
-                            onChange={(e) => setTargetEndDate(e.target.value)}
-                            className="block w-full pl-10 px-3 py-2.5 border-2 border-teal-100 rounded-[3px] shadow-sm text-teal-900 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 text-sm bg-teal-50/30 font-bold"
-                        />
+    <Card className="shadow-medium border-0 ring-1 ring-slate-100">
+      <CardContent className="p-0">
+        <form onSubmit={handleSubmit}>
+          {/* Section 1: Medication Info */}
+          <div className="p-8 border-b border-slate-100 bg-white">
+            <h3 className="text-sm font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-xs">1</span>
+                Medication Details
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-1.5">
+                    <Label>Substance</Label>
+                    <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-teal-600 transition-colors">
+                        <Pill className="w-4 h-4" />
                     </div>
+                    <select
+                        value={medication}
+                        onChange={(e) => setMedication(e.target.value as BenzoType)}
+                        className="block w-full pl-10 pr-10 py-2.5 text-sm border-slate-200 focus:outline-none focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 rounded-lg bg-white shadow-sm transition-all appearance-none border font-medium text-slate-700 cursor-pointer hover:border-slate-300"
+                    >
+                        {Object.values(BenzoType).map((med) => (
+                        <option key={med} value={med}>{med}</option>
+                        ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                        <Settings className="w-4 h-4 opacity-50" />
+                    </div>
+                    </div>
+                    {selectedMedData && (
+                    <div className="mt-3 flex gap-3 text-xs text-slate-500 font-medium">
+                        <span className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-md border border-slate-100"><Clock className="w-3.5 h-3.5"/> Half-life: {selectedMedData.halfLife}</span>
+                        <span className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-md border border-slate-100"><Scale className="w-3.5 h-3.5"/> Eq: 1mg ≈ {selectedMedData.diazepamEquivalence}mg Valium</span>
+                    </div>
+                    )}
                 </div>
-            )}
+
+                <Input 
+                    label="Current Daily Dose (mg)"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={dose}
+                    onChange={(e) => setDose(e.target.value)}
+                    className="font-medium text-slate-900"
+                    icon={<Scale className="w-4 h-4" />}
+                />
+            </div>
           </div>
 
-          <div className="pt-2">
-            <Button type="submit" size="lg" className="w-full">
-                Generate Schedule
-                <ArrowRight size={18} className="ml-1 opacity-60" />
+          {/* Section 2: Pace */}
+          <div className="p-8 border-b border-slate-100 bg-slate-50/50">
+            <h3 className="text-sm font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 text-xs">2</span>
+                Reduction Pace
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+              {Object.values(TaperSpeed).map((s) => {
+                  const isSelected = speed === s;
+                  const [title, sub] = s.split('(');
+                  const cleanSub = sub ? sub.replace(')', '') : '';
+                  
+                  return (
+                    <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSpeed(s)}
+                    className={`
+                        relative px-4 py-4 rounded-xl border text-left transition-all flex flex-col justify-between min-h-[100px] group
+                        ${isSelected 
+                        ? 'bg-white border-teal-500 ring-2 ring-teal-500/20 shadow-md z-10' 
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+                        }
+                    `}
+                    >
+                        <span className={`font-bold text-sm block ${isSelected ? 'text-teal-700' : 'text-slate-700'}`}>{title.trim()}</span>
+                        <div className="flex justify-between items-end w-full mt-2">
+                            {cleanSub && <span className={`text-xs font-medium ${isSelected ? 'text-teal-600/80' : 'text-slate-400'}`}>{cleanSub}</span>}
+                            {isSelected && <CheckCircle2 className="w-5 h-5 text-teal-500" />}
+                        </div>
+                    </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Section 3: Timeline */}
+          <div className="p-8 bg-white">
+            <h3 className="text-sm font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 text-xs">3</span>
+                Timeline
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <Input 
+                    label="Start Date"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    icon={<Calendar className="w-4 h-4" />}
+                />
+                
+                {speed === TaperSpeed.CUSTOM && (
+                    <div className="animate-in fade-in slide-in-from-left-2 duration-300">
+                        <Label className="text-teal-700">Target End Date</Label>
+                        <div className="relative mt-1.5">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Calendar className="w-4 h-4 text-teal-600" />
+                            </div>
+                            <input
+                                type="date"
+                                min={startDate}
+                                value={targetEndDate}
+                                onChange={(e) => setTargetEndDate(e.target.value)}
+                                className="block w-full pl-10 px-3 py-2.5 border border-teal-200 rounded-lg shadow-sm text-teal-900 focus:outline-none focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 text-sm bg-teal-50 font-medium transition-all"
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
+          </div>
+
+          <div className="p-6 bg-slate-50 border-t border-slate-100 flex justify-end">
+            <Button type="submit" size="lg" className="w-full sm:w-auto shadow-md shadow-teal-900/10">
+                {initialValues ? 'Update Schedule' : 'Generate Schedule'}
+                <ArrowRight className="w-4 h-4 ml-2 opacity-80" />
             </Button>
           </div>
         </form>

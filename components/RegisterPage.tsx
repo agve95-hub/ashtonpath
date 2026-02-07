@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { Card, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
-import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 
 interface Props {
   onRegister: (name: string) => void;
   onSwitchToLogin: () => void;
 }
 
-export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) => {
+export const RegisterPage: React.FC<Props> = (props) => {
+  const { onRegister, onSwitchToLogin } = props;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,7 +38,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-[3px] bg-teal-700 text-white font-bold text-2xl mb-4 shadow-sm">
             A
           </div>
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight uppercase">Create an account</h2>
+          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Create an account</h2>
           <p className="text-slate-500 text-lg">Start your personalized tapering plan</p>
         </div>
 
@@ -51,7 +52,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
-                icon={<User className="h-4 w-4" />}
+                icon={<User className="w-4 h-4 text-slate-400" />}
               />
 
               <Input
@@ -61,7 +62,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                icon={<Mail className="h-4 w-4" />}
+                icon={<Mail className="w-4 h-4 text-slate-400" />}
               />
 
               <div className="grid grid-cols-2 gap-4">
@@ -72,7 +73,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••"
-                    icon={<Lock className="h-4 w-4" />}
+                    icon={<Lock className="w-4 h-4 text-slate-400" />}
                 />
                 <Input
                     label="Confirm"
@@ -81,7 +82,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••"
-                    icon={<Lock className="h-4 w-4" />}
+                    icon={<Lock className="w-4 h-4 text-slate-400" />}
                 />
               </div>
 
@@ -91,7 +92,7 @@ export const RegisterPage: React.FC<Props> = ({ onRegister, onSwitchToLogin }) =
 
               <Button type="submit" size="lg" className="w-full mt-2" isLoading={isLoading}>
                 Create Account
-                {!isLoading && <ArrowRight size={18} className="ml-1 opacity-60" />}
+                {!isLoading && <ArrowRight className="w-4 h-4 ml-1 opacity-60" />}
               </Button>
             </form>
           </CardContent>

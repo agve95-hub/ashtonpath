@@ -6,7 +6,8 @@ interface Props {
   steps: TaperStep[];
 }
 
-export const TaperChart: React.FC<Props> = ({ steps }) => {
+export const TaperChart: React.FC<Props> = (props) => {
+  const { steps } = props;
   // Transform steps into a time-series based on durationDays
   const data = useMemo(() => {
     let accumulatedDays = 0;
