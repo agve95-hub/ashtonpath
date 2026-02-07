@@ -11,7 +11,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label className="block text-sm font-medium text-slate-700">
+          <label className="block text-sm font-bold text-slate-700 uppercase tracking-wide">
             {label}
           </label>
         )}
@@ -24,17 +24,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={`
-              block w-full rounded-xl border-slate-200 bg-white text-slate-900 shadow-sm transition-colors
-              placeholder:text-slate-400 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10
+              block w-full rounded-none border-slate-300 bg-white text-slate-900 shadow-sm transition-all
+              placeholder:text-slate-400 focus:border-teal-600 focus:ring-1 focus:ring-teal-600
               disabled:cursor-not-allowed disabled:opacity-50
               ${icon ? 'pl-10' : 'px-3'} py-2.5 text-sm border
-              ${error ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10' : ''}
+              ${error ? 'border-red-400 focus:border-red-500 focus:ring-red-500' : ''}
               ${className}
             `}
             {...props}
           />
         </div>
-        {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+        {error && <p className="text-xs text-red-600 mt-1 font-medium">{error}</p>}
       </div>
     );
   }

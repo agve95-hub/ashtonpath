@@ -38,9 +38,9 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
   const selectedMedData = BENZO_DETAILS[medication];
 
   return (
-    <Card className="h-full border-t-4 border-t-teal-500 shadow-md">
+    <Card className="h-full border-t-4 border-t-teal-700 shadow-md">
       <CardHeader>
-        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
           <Activity className="text-teal-600" size={20} />
           Plan Your Taper
         </h2>
@@ -60,7 +60,7 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
               <select
                 value={medication}
                 onChange={(e) => setMedication(e.target.value as BenzoType)}
-                className="block w-full pl-10 pr-10 py-2.5 text-sm border-slate-200 focus:outline-none focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500 rounded-xl bg-white shadow-sm transition-all appearance-none border"
+                className="block w-full pl-10 pr-10 py-2.5 text-sm border-slate-300 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 rounded-none bg-white shadow-sm transition-all appearance-none border font-medium"
               >
                 {Object.values(BenzoType).map((med) => (
                   <option key={med} value={med}>{med}</option>
@@ -71,10 +71,10 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
               </div>
             </div>
             {selectedMedData && (
-              <div className="mt-2 bg-slate-50 border border-slate-100 p-3 rounded-lg text-xs text-slate-600">
+              <div className="mt-2 bg-slate-50 border border-slate-200 p-3 rounded-none text-xs text-slate-600 font-medium">
                 <div className="flex gap-4">
-                    <span><span className="font-semibold">Half-life:</span> {selectedMedData.halfLife}</span>
-                    <span><span className="font-semibold">Eq:</span> 1mg ≈ {selectedMedData.diazepamEquivalence}mg Valium</span>
+                    <span><span className="font-bold">Half-life:</span> {selectedMedData.halfLife}</span>
+                    <span><span className="font-bold">Eq:</span> 1mg ≈ {selectedMedData.diazepamEquivalence}mg Valium</span>
                 </div>
               </div>
             )}
@@ -100,14 +100,14 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
                   key={s}
                   type="button"
                   onClick={() => setSpeed(s)}
-                  className={`px-2 py-3 text-xs font-medium rounded-xl border text-center transition-all flex flex-col items-center justify-center h-full min-h-[60px] relative overflow-hidden ${
+                  className={`px-2 py-3 text-xs font-medium rounded-none border text-center transition-all flex flex-col items-center justify-center h-full min-h-[60px] relative overflow-hidden ${
                     speed === s 
-                      ? 'bg-teal-50 border-teal-500 text-teal-800 ring-1 ring-teal-500 shadow-sm' 
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
+                      ? 'bg-teal-50 border-teal-600 text-teal-900 ring-1 ring-teal-600' 
+                      : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50 hover:border-slate-400'
                   }`}
                 >
                   <span className="font-bold text-sm mb-0.5">{s.split('(')[0]}</span>
-                  <span className="text-[10px] opacity-80 whitespace-nowrap">{s.match(/\(([^)]+)\)/)?.[1]}</span>
+                  <span className="text-[10px] opacity-80 whitespace-nowrap uppercase tracking-wider">{s.match(/\(([^)]+)\)/)?.[1]}</span>
                 </button>
               ))}
             </div>
@@ -135,7 +135,7 @@ export const TaperForm: React.FC<Props> = ({ onGenerate }) => {
                             min={startDate}
                             value={targetEndDate}
                             onChange={(e) => setTargetEndDate(e.target.value)}
-                            className="block w-full pl-10 px-3 py-2.5 border-2 border-teal-100 rounded-xl shadow-sm text-teal-900 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 text-sm bg-teal-50/30"
+                            className="block w-full pl-10 px-3 py-2.5 border-2 border-teal-100 rounded-none shadow-sm text-teal-900 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 text-sm bg-teal-50/30 font-bold"
                         />
                     </div>
                 </div>

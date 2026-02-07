@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { UserProfile } from '../types';
 import { Card, CardHeader, CardContent } from './ui/Card';
 import { Button } from './ui/Button';
-import { User, Camera, Lock, Save, Clock, Calendar } from 'lucide-react';
+import { User, Camera, Lock, Check, Clock, Calendar } from 'lucide-react';
 
 interface Props {
   profile: UserProfile;
@@ -52,7 +52,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
                 <User size={20} className="text-teal-600" />
                 Personal Profile
              </h3>
@@ -81,7 +81,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                             accept="image/*"
                             onChange={handleImageUpload} 
                         />
-                        <button type="button" onClick={() => fileInputRef.current?.click()} className="text-xs text-teal-600 font-medium hover:text-teal-700">
+                        <button type="button" onClick={() => fileInputRef.current?.click()} className="text-xs text-teal-600 font-bold hover:text-teal-700 uppercase tracking-wide">
                             Change Photo
                         </button>
                     </div>
@@ -90,45 +90,45 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
                     <div className="flex-1 w-full space-y-5">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                              <div className="space-y-1">
-                                <label className="text-sm font-medium text-slate-700">Full Name</label>
+                                <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Full Name</label>
                                 <input 
                                     type="text" 
                                     value={formData.name} 
                                     onChange={e => setFormData(prev => ({...prev, name: e.target.value}))}
-                                    className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                                    className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                                     placeholder="Your Name"
                                 />
                              </div>
                              <div className="space-y-1">
-                                <label className="text-sm font-medium text-slate-700">Age</label>
+                                <label className="text-sm font-bold text-slate-700 uppercase tracking-wide">Age</label>
                                 <input 
                                     type="number" 
                                     value={formData.age} 
                                     onChange={e => setFormData(prev => ({...prev, age: e.target.value}))}
-                                    className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                                    className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                                     placeholder="e.g. 35"
                                 />
                              </div>
                         </div>
                         <div className="space-y-1">
-                            <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+                            <label className="text-sm font-bold text-slate-700 flex items-center gap-2 uppercase tracking-wide">
                                 <Clock size={14} className="text-slate-400" />
-                                Duration of Benzodiazepine Usage
+                                Duration of Usage
                             </label>
                              <input 
                                 type="text" 
                                 value={formData.usageDuration} 
                                 onChange={e => setFormData(prev => ({...prev, usageDuration: e.target.value}))}
-                                className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                                className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                                 placeholder="e.g. 2 years, 6 months..."
                             />
                         </div>
                          <div className="flex justify-between items-center pt-2">
                             {saveSuccess ? (
-                                <span className="text-sm text-teal-600 font-medium animate-in fade-in">Profile saved!</span>
+                                <span className="text-sm text-teal-600 font-bold animate-in fade-in uppercase">Profile saved!</span>
                             ) : <span></span>}
-                            <Button type="submit" size="sm">
-                                <Save size={16} className="mr-2" />
+                            <Button type="submit" size="md">
+                                <Check size={18} className="mr-2" />
                                 Save Profile
                             </Button>
                         </div>
@@ -140,7 +140,7 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
 
       <Card>
         <CardHeader>
-            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wide">
                 <Lock size={20} className="text-slate-400" />
                 Security
             </h3>
@@ -148,34 +148,34 @@ export const UserProfileEditor: React.FC<Props> = ({ profile, onSave }) => {
         <CardContent>
             <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Current Password</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-1 uppercase tracking-wide">Current Password</label>
                     <input 
                         type="password" 
                         value={passwordData.current}
                         onChange={e => setPasswordData(prev => ({...prev, current: e.target.value}))}
-                        className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">New Password</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-1 uppercase tracking-wide">New Password</label>
                     <input 
                         type="password" 
                         value={passwordData.new}
                         onChange={e => setPasswordData(prev => ({...prev, new: e.target.value}))}
-                        className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Confirm New Password</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-1 uppercase tracking-wide">Confirm New Password</label>
                     <input 
                         type="password" 
                         value={passwordData.confirm}
                         onChange={e => setPasswordData(prev => ({...prev, confirm: e.target.value}))}
-                        className="block w-full px-3 py-2 border border-slate-300 rounded-xl shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
+                        className="block w-full px-3 py-2 border border-slate-300 rounded-none shadow-sm focus:ring-teal-500 focus:border-teal-500 text-sm"
                     />
                 </div>
                 <div className="pt-2">
-                    <Button type="submit" variant="secondary" size="sm">
+                    <Button type="submit" variant="secondary" size="md">
                         Update Password
                     </Button>
                 </div>
