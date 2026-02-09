@@ -42,5 +42,10 @@ Benzodiazepine withdrawal can be dangerous and potentially life-threatening if d
 The schedules generated here are mathematical approximations based on the Ashton Manual principles 
 but must be reviewed and supervised by a qualified healthcare professional.
 
+The Ashton Manual emphasizes:
+1. Gradual substitution to Diazepam (Valium) for smoother tapering.
+2. Individualized reduction rates (listen to your body).
+3. Stopping if symptoms become severe.
+
 Never stop taking benzodiazepines abruptly.
 `;

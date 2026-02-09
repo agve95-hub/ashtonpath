@@ -5,7 +5,12 @@ import { Button } from './ui/Button';
 import { Label } from './ui/Label';
 import { Badge } from './ui/Badge';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Activity, CalendarDays, Brain, RefreshCw, Zap, Thermometer, Frown, HeartPulse, Moon, FileText, Check, ArrowRight, AlertTriangle } from 'lucide-react';
+import { 
+  Activity, CalendarDays, Brain, RefreshCw, Zap, Thermometer, Frown, 
+  HeartPulse, Moon, FileText, Check, ArrowRight, AlertTriangle, Eye, 
+  Ear, UserX, Smile, Footprints, Music, Coffee, Book, 
+  Wind, Users, Palette, MessageCircle, Timer, CheckCircle2, Sun
+} from 'lucide-react';
 
 interface Props {
   logs: DailyLogEntry[];
@@ -23,6 +28,26 @@ interface RangeInputProps {
   gradientTo?: string;
 }
 
+const COMMON_ACTIVITIES = [
+    "Walking", "Jogging", "Meditation", "Yoga", 
+    "Breathing Exercises", "Reading", "Socializing", 
+    "Therapy", "Music", "Creative Work", "Stretching"
+];
+
+const ACTIVITY_ICONS: Record<string, React.ElementType> = {
+  "Walking": Footprints,
+  "Jogging": Timer,
+  "Meditation": Sun,
+  "Yoga": Activity,
+  "Breathing Exercises": Wind,
+  "Reading": Book,
+  "Socializing": Users,
+  "Therapy": MessageCircle,
+  "Music": Music,
+  "Creative Work": Palette,
+  "Stretching": RefreshCw
+};
+
 const RangeInput: React.FC<RangeInputProps> = (props) => {
   const { 
     label, 
@@ -35,8 +60,8 @@ const RangeInput: React.FC<RangeInputProps> = (props) => {
   } = props;
 
   return (
-    <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:border-slate-300 transition-all hover:shadow-md group">
-      <div className="flex justify-between items-center mb-6">
+    <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:border-slate-300 transition-all hover:shadow-md group relative overflow-hidden">
+      <div className="flex justify-between items-center mb-6 relative z-10">
         <label className="flex items-center gap-2 text-sm font-bold text-slate-700 group-hover:text-slate-900 transition-colors">
           {icon}
           {label}
@@ -45,10 +70,10 @@ const RangeInput: React.FC<RangeInputProps> = (props) => {
           {value}/10
         </span>
       </div>
-      <div className="px-1 relative h-6 flex items-center">
+      <div className="px-1 relative h-6 flex items-center z-10">
         <div className="absolute left-0 right-0 h-2 bg-slate-100 rounded-full overflow-hidden">
           <div 
-              className={`h-full bg-gradient-to-r ${gradientFrom} ${gradientTo} opacity-80`} 
+              className={`h-full bg-gradient-to-r ${gradientFrom} ${gradientTo} opacity-80 transition-all duration-300`} 
               style={{ width: `${value * 10}%` }}
           />
         </div>
@@ -68,8 +93,8 @@ const RangeInput: React.FC<RangeInputProps> = (props) => {
            <div className={`w-2 h-2 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${value > 0 ? colorClass.replace('text-', 'bg-') : 'bg-slate-300'}`} />
         </div>
       </div>
-      <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-4 px-1 select-none">
-        <span>No Symptoms</span>
+      <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-4 px-1 select-none z-10 relative">
+        <span>None</span>
         <span>Severe</span>
       </div>
     </div>
@@ -89,11 +114,15 @@ export const DailyJournal: React.FC<Props> = (props) => {
     musclePain: 0,
     nausea: 0,
     irritability: 0,
+    depersonalization: 0,
+    sensorySensitivity: 0,
+    tinnitus: 0,
     sleepQuality: 5,
     sleepHours: 7,
     systolic: '',
     diastolic: '',
     medications: '',
+    activities: [],
     notes: '',
   });
 
@@ -104,6 +133,10 @@ export const DailyJournal: React.FC<Props> = (props) => {
         musclePain: existingEntry.musclePain || 0,
         nausea: existingEntry.nausea || 0,
         irritability: existingEntry.irritability || 0,
+        depersonalization: existingEntry.depersonalization || 0,
+        sensorySensitivity: existingEntry.sensorySensitivity || 0,
+        tinnitus: existingEntry.tinnitus || 0,
+        activities: existingEntry.activities || []
       });
     } else {
       setFormData({
@@ -114,35 +147,46 @@ export const DailyJournal: React.FC<Props> = (props) => {
         musclePain: 0,
         nausea: 0,
         irritability: 0,
+        depersonalization: 0,
+        sensorySensitivity: 0,
+        tinnitus: 0,
         sleepQuality: 5,
         sleepHours: 7,
         systolic: '',
         diastolic: '',
         medications: '',
+        activities: [],
         notes: '',
       });
     }
   }, [date, existingEntry]);
 
   const showWarning = useMemo(() => {
-    // Specific Thresholds:
-    // Stress 8+, Tremors 5+, Dizziness 5+
     const highStress = formData.stress >= 8;
     const highTremors = formData.tremors >= 5;
-    const highDizziness = formData.dizziness >= 5;
+    const severeDissociation = (formData.depersonalization || 0) >= 7;
     
     // Sleep: Quality 4 or less, Hours < 5
     const poorSleep = formData.sleepQuality <= 4;
     const lowSleepHours = formData.sleepHours < 5;
 
-    // Blood Pressure High: > 140/90
     const sys = parseInt(formData.systolic);
     const dia = parseInt(formData.diastolic);
     const bpHigh = (!isNaN(sys) && sys > 140) || (!isNaN(dia) && dia > 90);
 
-    // Any one of these conditions triggers warning
-    return highStress || highTremors || highDizziness || poorSleep || lowSleepHours || bpHigh;
+    return highStress || highTremors || severeDissociation || poorSleep || lowSleepHours || bpHigh;
   }, [formData]);
+
+  const toggleActivity = (activity: string) => {
+      setFormData(prev => {
+          const current = prev.activities || [];
+          if (current.includes(activity)) {
+              return { ...prev, activities: current.filter(a => a !== activity) };
+          } else {
+              return { ...prev, activities: [...current, activity] };
+          }
+      });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -165,8 +209,7 @@ export const DailyJournal: React.FC<Props> = (props) => {
       {logs.length > 1 && (
         <Card className="border-t-4 border-t-teal-600">
           <CardHeader>
-             <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-teal-600" />
+             <h3 className="text-sm font-bold text-slate-800">
                 Symptom Trends (Last 14 Days)
              </h3>
           </CardHeader>
@@ -194,7 +237,6 @@ export const DailyJournal: React.FC<Props> = (props) => {
                   <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px', fontFamily: 'Figtree', fontSize: '12px' }} />
                   <Line type="monotone" dataKey="stress" name="Stress" stroke="#ef4444" strokeWidth={2} dot={false} activeDot={{r: 4, strokeWidth: 0}} />
                   <Line type="monotone" dataKey="tremors" name="Tremors" stroke="#f59e0b" strokeWidth={2} dot={false} activeDot={{r: 4, strokeWidth: 0}} />
-                  <Line type="monotone" dataKey="dizziness" name="Dizziness" stroke="#8b5cf6" strokeWidth={2} dot={false} activeDot={{r: 4, strokeWidth: 0}} />
                   <Line type="monotone" dataKey="sleepQuality" name="Sleep Quality" stroke="#0ea5e9" strokeWidth={2} dot={false} activeDot={{r: 4, strokeWidth: 0}} />
                 </LineChart>
               </ResponsiveContainer>
@@ -224,7 +266,7 @@ export const DailyJournal: React.FC<Props> = (props) => {
                   <div className="space-y-6">
                       <div className="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50">
                         <Activity className="w-4 h-4 text-slate-400" />
-                        <h4 className="text-xs font-bold text-slate-500">Core Symptoms</h4>
+                        <h4 className="text-xs font-bold text-slate-500">Physical & Cognitive Symptoms</h4>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <RangeInput 
@@ -245,16 +287,7 @@ export const DailyJournal: React.FC<Props> = (props) => {
                               gradientFrom="from-amber-400"
                               gradientTo="to-amber-600"
                           />
-                          <RangeInput 
-                              label="Dizziness" 
-                              value={formData.dizziness} 
-                              onChange={v => setFormData(prev => ({...prev, dizziness: v}))}
-                              icon={<RefreshCw className="w-4 h-4 text-slate-400" />}
-                              colorClass="text-purple-500"
-                              gradientFrom="from-purple-400"
-                              gradientTo="to-purple-600"
-                          />
-                          <RangeInput 
+                           <RangeInput 
                               label="Muscle Pain" 
                               value={formData.musclePain || 0} 
                               onChange={v => setFormData(prev => ({...prev, musclePain: v}))}
@@ -263,32 +296,98 @@ export const DailyJournal: React.FC<Props> = (props) => {
                               gradientFrom="from-orange-400"
                               gradientTo="to-orange-600"
                           />
-                          <RangeInput 
-                              label="Nausea" 
-                              value={formData.nausea || 0} 
-                              onChange={v => setFormData(prev => ({...prev, nausea: v}))}
-                              icon={<Thermometer className="w-4 h-4 text-slate-400" />}
-                              colorClass="text-green-500"
-                              gradientFrom="from-green-400"
-                              gradientTo="to-green-600"
+                      </div>
+                  </div>
+
+                  {/* Ashton Specific Sensory Section */}
+                   <div className="space-y-6">
+                      <div className="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50">
+                        <Eye className="w-4 h-4 text-slate-400" />
+                        <h4 className="text-xs font-bold text-slate-500">Ashton Sensory Symptoms</h4>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           <RangeInput 
+                              label="Depersonalization" 
+                              value={formData.depersonalization || 0} 
+                              onChange={v => setFormData(prev => ({...prev, depersonalization: v}))}
+                              icon={<UserX className="w-4 h-4 text-slate-400" />}
+                              colorClass="text-indigo-500"
+                              gradientFrom="from-indigo-400"
+                              gradientTo="to-indigo-600"
                           />
                           <RangeInput 
-                              label="Irritability" 
-                              value={formData.irritability || 0} 
-                              onChange={v => setFormData(prev => ({...prev, irritability: v}))}
-                              icon={<Frown className="w-4 h-4 text-slate-400" />}
-                              colorClass="text-pink-500"
-                              gradientFrom="from-pink-400"
-                              gradientTo="to-pink-600"
+                              label="Sensory Sens." 
+                              value={formData.sensorySensitivity || 0} 
+                              onChange={v => setFormData(prev => ({...prev, sensorySensitivity: v}))}
+                              icon={<Eye className="w-4 h-4 text-slate-400" />}
+                              colorClass="text-violet-500"
+                              gradientFrom="from-violet-400"
+                              gradientTo="to-violet-600"
+                          />
+                          <RangeInput 
+                              label="Tinnitus" 
+                              value={formData.tinnitus || 0} 
+                              onChange={v => setFormData(prev => ({...prev, tinnitus: v}))}
+                              icon={<Ear className="w-4 h-4 text-slate-400" />}
+                              colorClass="text-blue-500"
+                              gradientFrom="from-blue-400"
+                              gradientTo="to-blue-600"
                           />
                       </div>
+                  </div>
+
+                  {/* Activities Section - Cards Style */}
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50">
+                        <Footprints className="w-4 h-4 text-slate-400" />
+                        <h4 className="text-xs font-bold text-slate-500">Positive Activities</h4>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {COMMON_ACTIVITIES.map(activity => {
+                            const isSelected = (formData.activities || []).includes(activity);
+                            const Icon = ACTIVITY_ICONS[activity] || Activity;
+                            
+                            return (
+                                <button
+                                    key={activity}
+                                    type="button"
+                                    onClick={() => toggleActivity(activity)}
+                                    className={`
+                                        relative flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200 group h-28
+                                        ${isSelected 
+                                            ? 'bg-teal-50 border-teal-500 ring-1 ring-teal-500 shadow-sm' 
+                                            : 'bg-white border-slate-200 hover:border-teal-300 hover:shadow-md'
+                                        }
+                                    `}
+                                >
+                                    {isSelected && (
+                                        <div className="absolute top-2 right-2 animate-in zoom-in duration-200">
+                                            <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                                        </div>
+                                    )}
+                                    <div className={`
+                                        p-2.5 rounded-full mb-2 transition-colors
+                                        ${isSelected 
+                                            ? 'bg-teal-200/50 text-teal-700' 
+                                            : 'bg-slate-50 text-slate-400 group-hover:bg-teal-50 group-hover:text-teal-600'
+                                        }
+                                    `}>
+                                        <Icon className="w-5 h-5" />
+                                    </div>
+                                    <span className={`text-xs font-bold text-center ${isSelected ? 'text-teal-900' : 'text-slate-600'}`}>
+                                        {activity}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
                   </div>
 
                   {/* Vitals Section */}
                   <div className="space-y-6">
                       <div className="flex items-center gap-2 mb-4 pb-2 border-b border-slate-50">
                         <HeartPulse className="w-4 h-4 text-slate-400" />
-                        <h4 className="text-xs font-bold text-slate-500">Physical Health</h4>
+                        <h4 className="text-xs font-bold text-slate-500">Vitals & Sleep</h4>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                           <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-6">
@@ -404,7 +503,7 @@ export const DailyJournal: React.FC<Props> = (props) => {
                             <h4 className="text-red-900 font-bold text-sm">Advisory Warning</h4>
                             <p className="text-red-800 text-sm mt-1 leading-relaxed opacity-90">
                                 Your reported symptoms indicate significant distress. 
-                                The Ashton Manual advises holding your dose and consulting a medical professional if withdrawal symptoms become severe (Stress ≥ 8, Tremors ≥ 5, Dizziness ≥ 5, Sleep quality ≤ 4, Sleep hours &lt; 5).
+                                The Ashton Manual advises holding your dose and consulting a medical professional if withdrawal symptoms become severe (high stress, derealization, or poor sleep).
                             </p>
                         </div>
                     </div>
@@ -473,8 +572,8 @@ export const DailyJournal: React.FC<Props> = (props) => {
                                     </span>
                                     <span className="w-1 h-1 rounded-full bg-slate-300"></span>
                                     <span className="flex items-center gap-1.5">
-                                        <Moon className="w-3 h-3 text-slate-400" />
-                                        Sleep: {log.sleepHours}h
+                                        <Eye className="w-3 h-3 text-slate-400" />
+                                        Sensory: {log.sensorySensitivity || 0}/10
                                     </span>
                                 </div>
                              </div>

@@ -8,14 +8,15 @@ import { DailyJournal } from './components/DailyJournal';
 import { UserProfileEditor } from './components/UserProfileEditor';
 import { LoginPage } from './components/LoginPage';
 import { RegisterPage } from './components/RegisterPage';
-import { TaperPlan, BenzoType, TaperSpeed, DailyLogEntry, UserProfile } from './types';
+import { ManualReference } from './components/ManualReference';
+import { TaperPlan, BenzoType, TaperSpeed, DailyLogEntry, UserProfile, Metabolism } from './types';
 import { calculateTaperSchedule } from './services/taperCalculator';
 import { Card, CardContent, CardHeader } from './components/ui/Card';
 import { Button } from './components/ui/Button';
 import { Modal } from './components/ui/Modal';
-import { BookOpen, LogOut, LayoutDashboard, ClipboardCheck, Settings, Activity, TrendingDown, RefreshCw, AlertCircle, Info } from 'lucide-react';
+import { BookOpen, LogOut, LayoutDashboard, ClipboardCheck, Settings, Activity, TrendingDown, RefreshCw, AlertCircle, Info, Timer } from 'lucide-react';
 
-type Tab = 'overview' | 'log' | 'settings';
+type Tab = 'overview' | 'log' | 'manual' | 'settings';
 type AuthView = 'login' | 'register';
 
 const App: React.FC = () => {
@@ -31,8 +32,6 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: '',
-    age: '',
-    usageDuration: '',
     avatar: ''
   });
   
@@ -62,7 +61,8 @@ const App: React.FC = () => {
                 durationDays: s.durationDays || 7,
                 completedDays: Array.isArray(s.completedDays) 
                     ? s.completedDays 
-                    : new Array(s.durationDays || 7).fill(s.isCompleted)
+                    : new Array(s.durationDays || 7).fill(s.isCompleted),
+                globalDayStart: s.globalDayStart || 1 // Fallback
             }));
         }
         setPlan(parsed);
@@ -117,8 +117,8 @@ const App: React.FC = () => {
     localStorage.setItem('ashton_disclaimer', 'true');
   };
 
-  const handleGeneratePlan = (med: BenzoType, dose: number, speed: TaperSpeed, date: string, targetEndDate?: string) => {
-    const newPlan = calculateTaperSchedule(med, dose, speed, date, targetEndDate);
+  const handleGeneratePlan = (med: BenzoType, dose: number, speed: TaperSpeed, age: number, metabolism: Metabolism, yearsUsing: number, date: string, targetEndDate?: string) => {
+    const newPlan = calculateTaperSchedule(med, dose, speed, age, metabolism, yearsUsing, date, targetEndDate);
     setPlan(newPlan);
     localStorage.setItem('ashton_plan', JSON.stringify(newPlan));
     setActiveTab('overview');
@@ -188,7 +188,14 @@ const App: React.FC = () => {
   const completedSteps = plan ? plan.steps.filter(s => s.isCompleted).length : 0;
   const totalSteps = plan ? plan.steps.length : 0;
   const progressPercentage = plan ? Math.round((completedSteps / totalSteps) * 100) : 0;
-  const currentDose = plan ? (plan.steps.find(s => !s.isCompleted)?.diazepamDose || 0) : 0;
+  const currentStep = plan?.steps.find(s => !s.isCompleted);
+  const currentValiumDose = currentStep?.diazepamDose || 0;
+  const currentOriginalDose = currentStep?.originalMedDose || 0;
+
+  // Calculate Days Remaining
+  const totalDays = plan ? plan.steps.reduce((acc, s) => acc + s.durationDays, 0) : 0;
+  const completedDaysCount = plan ? plan.steps.reduce((acc, s) => acc + s.completedDays.filter(Boolean).length, 0) : 0;
+  const daysRemaining = Math.max(0, totalDays - completedDaysCount);
 
   return (
     <div className="min-h-screen pb-24 bg-slate-50 font-sans text-slate-900 selection:bg-teal-100 selection:text-teal-900">
@@ -219,6 +226,9 @@ const App: React.FC = () => {
                     medication: plan.medication,
                     dose: plan.startDose,
                     speed: plan.speed,
+                    age: plan.age,
+                    metabolism: plan.metabolism,
+                    yearsUsing: plan.yearsUsing,
                     startDate: plan.startDate
                 } : undefined}
              />
@@ -226,10 +236,10 @@ const App: React.FC = () => {
       </Modal>
 
       {/* Header */}
-      <header className="bg-white/80 border-b border-slate-200/60 sticky top-0 z-40 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="bg-white/90 border-b border-slate-200/60 sticky top-0 z-40 backdrop-blur-md supports-[backdrop-filter]:bg-white/80 transition-all">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-teal-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm">
                 AP
             </div>
             <h1 className="text-lg font-bold text-slate-800 tracking-tight hidden sm:block">AshtonPath</h1>
@@ -263,7 +273,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 md:py-12">
         {!plan ? (
           <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
              <div className="mb-10 text-center space-y-3">
@@ -285,33 +295,37 @@ const App: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="animate-in fade-in duration-500 space-y-8">
+          <div className="animate-in fade-in duration-500 space-y-6 sm:space-y-8">
             
             {/* Header Area with Greeting & Navigation */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 sticky top-20 z-30 py-2">
-                <div className="text-center md:text-left">
+            <div className="flex flex-row items-center justify-between gap-4 sticky top-14 sm:top-16 z-30 py-3 bg-slate-50/95 backdrop-blur-sm sm:bg-transparent -mx-4 px-4 sm:mx-0 sm:px-0 border-b sm:border-b-0 border-slate-200/50 sm:static">
+                <div className="hidden sm:block">
                      {userProfile.name && <p className="text-sm font-medium text-slate-500 mb-0.5">Welcome back, {userProfile.name}</p>}
                      <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Your Journey</h2>
                 </div>
                 
-                <div className="bg-white/80 backdrop-blur-md p-1 rounded-full border border-slate-200 shadow-sm flex items-center">
-                    {(['overview', 'log', 'settings'] as const).map((tab) => (
+                {/* Mobile Title (visible only on small screens) */}
+                <h2 className="text-lg font-bold text-slate-900 tracking-tight sm:hidden">Your Journey</h2>
+
+                <div className="bg-white p-1 rounded-full border border-slate-200 shadow-sm flex items-center">
+                    {(['overview', 'log', 'manual', 'settings'] as const).map((tab) => (
                         <button
                             key={tab}
                             type="button"
                             onClick={() => setActiveTab(tab)}
                             className={`
-                                flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold capitalize tracking-wide transition-all duration-200
+                                flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-semibold capitalize tracking-wide transition-all duration-200
                                 ${activeTab === tab 
                                     ? 'bg-teal-600 text-white shadow-md' 
                                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
                                 }
                             `}
                         >
-                            {tab === 'overview' && <LayoutDashboard className="w-4 h-4" />}
-                            {tab === 'log' && <ClipboardCheck className="w-4 h-4" />}
-                            {tab === 'settings' && <Settings className="w-4 h-4" />}
-                            <span>{tab}</span>
+                            {tab === 'overview' && <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                            {tab === 'log' && <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                            {tab === 'manual' && <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                            {tab === 'settings' && <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                            <span className="hidden sm:inline">{tab}</span>
                         </button>
                     ))}
                 </div>
@@ -319,17 +333,23 @@ const App: React.FC = () => {
 
             {/* TAB CONTENT: Overview */}
             {activeTab === 'overview' && (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 
                 {/* Modern Progress Card */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Card className="md:col-span-2 bg-gradient-to-br from-slate-900 to-slate-800 text-white border-0 shadow-medium relative overflow-hidden">
                          <div className="absolute top-0 right-0 p-32 bg-teal-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-                         <CardContent className="h-full flex flex-col justify-between relative z-10 p-8">
+                         <CardContent className="h-full flex flex-col justify-between relative z-10 p-6 sm:p-8">
                              <div className="flex justify-between items-start mb-6">
                                 <div>
                                     <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Current Progress</p>
-                                    <h3 className="text-3xl font-bold">{progressPercentage}% <span className="text-lg font-normal text-slate-400">Complete</span></h3>
+                                    <h3 className="text-2xl sm:text-3xl font-bold">{progressPercentage}% <span className="text-base sm:text-lg font-normal text-slate-400">Complete</span></h3>
+                                    {daysRemaining > 0 && (
+                                        <div className="flex items-center gap-1.5 mt-2 text-teal-400 font-medium text-sm">
+                                            <Timer className="w-4 h-4" />
+                                            <span>{daysRemaining} days remaining</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="p-3 bg-white/5 rounded-xl backdrop-blur-sm border border-white/10">
                                     <Activity className="w-6 h-6 text-teal-400" />
@@ -351,7 +371,7 @@ const App: React.FC = () => {
                          </CardContent>
                     </Card>
 
-                    <Card className="border-slate-100 shadow-soft">
+                    <Card className="border-slate-100 shadow-soft hidden md:block">
                         <CardContent className="h-full flex flex-col justify-center p-8">
                              <div className="flex items-center gap-3 mb-4">
                                 <div className="p-2.5 bg-teal-50 text-teal-600 rounded-lg">
@@ -360,21 +380,36 @@ const App: React.FC = () => {
                                 <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Current Target</span>
                              </div>
                              <div>
-                                 <span className="text-4xl font-bold text-slate-900 tracking-tight">{currentDose}</span>
-                                 <span className="text-sm font-medium text-slate-500 ml-1">mg / day</span>
+                                 {/* Display Logic for Crossover vs Taper */}
+                                 {currentOriginalDose > 0 ? (
+                                    <>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-2xl font-bold text-slate-900 tracking-tight">{currentOriginalDose}</span>
+                                            <span className="text-xs font-medium text-slate-500">mg {plan.medication.split(' ')[0]}</span>
+                                        </div>
+                                        <div className="flex items-baseline gap-2 mt-1">
+                                            <span className="text-2xl font-bold text-indigo-600 tracking-tight">{currentValiumDose}</span>
+                                            <span className="text-xs font-medium text-slate-500">mg Valium</span>
+                                        </div>
+                                    </>
+                                 ) : (
+                                    <>
+                                        <span className="text-4xl font-bold text-slate-900 tracking-tight">{currentValiumDose}</span>
+                                        <span className="text-sm font-medium text-slate-500 ml-1">mg Valium</span>
+                                    </>
+                                 )}
                              </div>
-                             <p className="text-xs text-slate-400 mt-2 font-medium">Diazepam Equivalent</p>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Chart */}
                 <Card>
-                    <CardHeader className="flex flex-row items-center justify-between py-5 border-b border-slate-100">
-                        <h3 className="text-sm font-bold text-slate-800">Reduction Curve</h3>
+                    <CardHeader className="flex flex-row items-center py-4 sm:py-5 border-b border-slate-100">
+                        <h3 className="text-sm font-bold text-slate-800">Reduction Curve (Diazepam Equivalent)</h3>
                     </CardHeader>
-                    <CardContent>
-                        <TaperChart steps={plan.steps} />
+                    <CardContent className="p-4 sm:p-6">
+                        <TaperChart steps={plan.steps} medication={plan.medication} />
                     </CardContent>
                 </Card>
 
@@ -396,6 +431,13 @@ const App: React.FC = () => {
                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <DailyJournal logs={logs} onSave={handleSaveLog} />
                </div>
+            )}
+            
+            {/* TAB CONTENT: Manual */}
+            {activeTab === 'manual' && (
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <ManualReference />
+                </div>
             )}
 
             {/* TAB CONTENT: Settings */}
